@@ -113,6 +113,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL =  '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL =  '/dockerfiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "dockerfiles")
 STATIC_URL = '/static/'
