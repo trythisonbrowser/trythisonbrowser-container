@@ -34,15 +34,8 @@ def searchImages(request, pk):
     response_json = response.json()
     return Response(response_json)
 
-# imput Dockefile, build image from file
-def bulidImages(request):
-    # read Dockerfile 
-
-    # build Docker image from file
-
-    # push to registry
-    pass
-
+# build and push Dockerfile to registry from file
+# /upload {file}
 class MyFileView(APIView):
     # MultiPartParser AND FormParser
     # https://www.django-rest-framework.org/api-guide/parsers/#multipartparser
@@ -71,3 +64,15 @@ class MyFileView(APIView):
 
 
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#pipe-dockerfile-through-stdin
+# build and push Dockerfile to registry from stdin
+# /upload/stream {stdin}
+@api_view(['GET', 'POST'])
+def pipeBuild(request, pk):
+    response = requests.get(BASE_URL + 'v2/' + pk + '/tags/list')
+    if str(response.status_code) == '404':
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    response_json = response.json()
+
+    buildStream = 'echo -e' + pk + "| docker build -"
+    rc = subprocess.call(pk, shell=True)
+    return Response(status=status.HTTP_201_CREATED)

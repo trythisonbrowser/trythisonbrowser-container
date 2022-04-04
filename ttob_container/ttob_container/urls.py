@@ -12,7 +12,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('images/', getImages, name="getImages"),
     path('images/search/<str:pk>', searchImages, name="searchImages"),
-    path('upload/', MyFileView.as_view(), name='file-upload'),
+    path('upload/', MyFileView.as_view(), name='image-upload'),
+    path('upload/stdin/<str:pk>', pipeBuild, name='pipe-upload'),
 ]
 
 if settings.DEBUG:
