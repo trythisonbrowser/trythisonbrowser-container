@@ -3,12 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import os
 import requests
 import subprocess
 
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import MyFileSerializer
-
 
 # registry url
 BASE_URL = 'http://127.0.0.1:5000/'
@@ -42,18 +42,16 @@ class MyFileView(APIView):
 
     def post(self, request, *args, **kwargs):
         file_serializer = MyFileSerializer(data=request.data)
+        
         # read & save Dockerfile 
         if file_serializer.is_valid():
             file_serializer.save()
 
             # build Docker image from file
-            rc = subprocess.call("docker build ../media/Dockerfile", shell=True)
 
             # change tag and push to registry
-            rc = subprocess.call("echo ''", shell=True)
 
             # remove Dockerfile from media
-            rc = subprocess.call("echo ''", shell=True)
 
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
