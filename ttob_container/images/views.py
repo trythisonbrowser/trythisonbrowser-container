@@ -15,7 +15,6 @@ from .serializers import MyFileSerializer
 BASE_URL = 'http://127.0.0.1:5000/'
 TAG_PREFIX = 'localhost:5000/'
 
-# TODO how can i get uploaded filename?
 # getattr(settings, 'MEDIA_URL')
 dockerfile_path = getattr(settings, 'MEDIA_ROOT')
 
@@ -59,11 +58,16 @@ class MyFileView(APIView):
             try:
                 # build Docker image from file
                 tag = TAG_PREFIX + model_obj.projectName
+                print("===========================")
+                print("INFO: image is being built...")
                 image = client.images.build(path=dockerfile_path, tag=tag)
-                print("INFO: image build complete")
+                print("INFO: image build complete.")
                 print(image[0].short_id)
                 print("===========================")
                 # push to registry
+                for line in client.api.push(tag, stream=True, decode=True):
+                    print(line)
+                    print("INFO: image upload complete.")
 
             except Exception as e:
                 print(e)
