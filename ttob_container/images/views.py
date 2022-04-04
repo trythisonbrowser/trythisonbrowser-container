@@ -14,9 +14,9 @@ from .serializers import MyFileSerializer
 BASE_URL = 'http://127.0.0.1:5000/'
 
 # /images
+# http://localhost:5000/v2/_catalog
 @api_view(['GET', 'POST'])
 def getImages(request):
-    # http://localhost:5000/v2/_catalog
     response = requests.get(BASE_URL + 'v2/_catalog')
     if str(response.status_code) == '404':
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -24,10 +24,10 @@ def getImages(request):
     return Response(response_json)
 
 # search with image name, response tag
+# http://localhost:5000/v2/centos/tags/list
 # /images/search/<str:tag>
 @api_view(['GET', 'POST'])
 def searchImages(request, pk):
-    # http://localhost:5000/v2/centos/tags/list
     response = requests.get(BASE_URL + 'v2/' + pk + '/tags/list')
     if str(response.status_code) == '404':
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -38,14 +38,11 @@ def searchImages(request, pk):
 # /upload {file}
 class MyFileView(APIView):
     # MultiPartParser AND FormParser
-    # https://www.django-rest-framework.org/api-guide/parsers/#multipartparser
-    # "You will typically want to use both FormParser and MultiPartParser together in order to fully support HTML form data."
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
         file_serializer = MyFileSerializer(data=request.data)
         # read & save Dockerfile 
-        # 파일 이름
         if file_serializer.is_valid():
             file_serializer.save()
 
